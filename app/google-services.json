@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "429590946764",
+    "project_id": "notesapp-dcfc6",
+    "storage_bucket": "notesapp-dcfc6.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:429590946764:android:47e5d4036aeff122edb369",
+        "android_client_info": {
+          "package_name": "com.bahy.notesapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBrQgPcnmqwPzkpckn4CpzIPhy6VU1fR9U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
