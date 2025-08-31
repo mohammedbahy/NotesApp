@@ -8,6 +8,12 @@ android {
     namespace = "com.bahy.notesapp"
     compileSdk = 36
 
+    buildFeatures{
+        viewBinding = true
+    }
+
+
+
     defaultConfig {
         applicationId = "com.bahy.notesapp"
         minSdk = 29
