@@ -22,7 +22,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         binding=ActivityMainBinding.inflate(layoutInflater)
-        setContentView(R.layout.activity_main)
+        setContentView(binding.root)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
@@ -51,8 +51,8 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.signInBtn.setOnClickListener{
-            var email= binding.email.toString()
-            var password= binding.password.toString()
+            val email= binding.email.text.toString()
+            val password= binding.pass.text.toString()
 
             if (email.isBlank() || password.isBlank())
                 Toast.makeText(this, "Fill Required Fields", Toast.LENGTH_SHORT).show();

@@ -14,10 +14,10 @@
         android:layout_marginTop="264dp"
         android:layout_marginHorizontal="32dp"
         android:layout_width="match_parent"
-        android:layout_height="48dp"/>
+        android:layout_height="wrap_content"/>
 
     <EditText
-        android:id="@+id/password"
+        android:id="@+id/pass"
         android:hint="@string/password"
         android:layout_marginTop="16dp"
         android:layout_marginHorizontal="32dp"

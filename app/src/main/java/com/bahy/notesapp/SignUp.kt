@@ -16,11 +16,12 @@ import com.google.firebase.auth.auth
 class SignUp : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
     lateinit var binding: ActivitySignUpBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySignUpBinding.inflate(layoutInflater)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_sign_up)
+        setContentView(binding.root)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
@@ -34,9 +35,9 @@ class SignUp : AppCompatActivity() {
         }
 
         binding.signUpBtn.setOnClickListener {
-            var email = binding.email.toString()
-            var password = binding.password.toString()
-            var conPassword = binding.confirmPassword.toString()
+            val email = binding.email.text.toString()
+            val password = binding.password.text.toString()
+            val conPassword = binding.confirmPassword.text.toString()
 
             if (email.isBlank() || password.isBlank() || conPassword.isBlank())
                 Toast.makeText(this, "Fill Required Fields", Toast.LENGTH_SHORT).show();
