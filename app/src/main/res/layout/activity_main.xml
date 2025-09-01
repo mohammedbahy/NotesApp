@@ -48,5 +48,16 @@
         android:layout_marginTop="8dp"
         android:text="@string/create_new_account"/>
 
+    <ProgressBar
+        android:id="@+id/loading_progress"
+        android:foregroundGravity="center_horizontal"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="8dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        tools:visibility="visible"/>
+
+
 
 </LinearLayout>
