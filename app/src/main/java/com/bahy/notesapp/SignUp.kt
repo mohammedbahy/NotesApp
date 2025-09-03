@@ -48,7 +48,6 @@ class SignUp : AppCompatActivity() {
             else {
                 binding.loadingProgress.isVisible = true
 
-                //Sign up logic
                 signUp(email,password)
             }
         }
@@ -67,12 +66,13 @@ class SignUp : AppCompatActivity() {
 
     private fun verifyEmail() {
         val user = Firebase.auth.currentUser
-
         user!!.sendEmailVerification()
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     Toast.makeText(this, "Check your email!", Toast.LENGTH_SHORT).show();
                     binding.loadingProgress.isVisible=false
+
+                    Firebase.auth.signOut()
                     startActivity(Intent(this,MainActivity::class.java))
                     finish()
                 }

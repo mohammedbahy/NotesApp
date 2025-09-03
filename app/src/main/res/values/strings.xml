@@ -8,4 +8,5 @@
     <string name="sign_up">Sign Up</string>
     <string name="create_new_account"><u>Create new account?</u></string>
     <string name="already_user"><u>Already User?</u></string>
+    <string name="delete">delete</string>
 </resources>
