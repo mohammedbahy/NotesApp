@@ -90,14 +90,9 @@ class MainActivity : AppCompatActivity() {
     public override fun onStart() {
         super.onStart()
         val currentUser = auth.currentUser
-        if (currentUser != null) {
-            if (currentUser.isEmailVerified) {
+        if (currentUser != null && currentUser.isEmailVerified) {
                 startActivity(Intent(this, NotesList::class.java))
                 finish()
-            } else {
-                Toast.makeText(this, "Please verify your email.", Toast.LENGTH_SHORT).show()
-                auth.signOut()
-            }
         }
     }
 }
