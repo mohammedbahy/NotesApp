@@ -3,20 +3,23 @@ package com.bahy.notesapp
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.bahy.notesapp.databinding.ActivityListItemBinding
-import com.google.firebase.Firebase
-import com.google.firebase.auth.auth
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
 class ListItem : AppCompatActivity() {
 
     private lateinit var binding: ActivityListItemBinding
-    private var noteIndex: Int? = null
+    private val db = FirebaseFirestore.getInstance()
+    private val userId = FirebaseAuth.getInstance().currentUser!!.uid
+
+    private var noteId: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityListItemBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        noteIndex = intent.getIntExtra("noteIndex", -1).takeIf { it != -1 }
+        noteId = intent.getStringExtra("noteIndex")
         val noteTitle = intent.getStringExtra("noteTitle")
         val noteContent = intent.getStringExtra("noteContent")
 
@@ -30,17 +33,21 @@ class ListItem : AppCompatActivity() {
             val content = binding.noteContentEditText.text.toString()
 
             if (title.isNotEmpty() || content.isNotEmpty()) {
-                val userId = Firebase.auth.currentUser?.uid ?: return@setOnClickListener
-                val notes = NotesStorage.loadNotes(this, userId).toMutableList()
+                val note = hashMapOf(
+                    "title" to title,
+                    "content" to content,
+                    "timestamp" to System.currentTimeMillis()
+                )
 
-                if (noteIndex != null) {
-                    notes[noteIndex!!] = Note(title, content, System.currentTimeMillis())
+                if (noteId != null) {
+                    db.collection("users").document(userId)
+                        .collection("notes").document(noteId!!)
+                        .set(note)
                 } else {
-                    val note = Note(title, content, System.currentTimeMillis())
-                    notes.add(note)
+                    db.collection("users").document(userId)
+                        .collection("notes")
+                        .add(note)
                 }
-
-                NotesStorage.saveNotes(this, userId, notes)
             }
             finish()
         }

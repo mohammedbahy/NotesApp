@@ -5,11 +5,16 @@ import android.view.ViewGroup
 import android.widget.PopupMenu
 import androidx.recyclerview.widget.RecyclerView
 import com.bahy.notesapp.databinding.ActivityNoteItemBinding
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
-class NotesAdapter(private val notes: MutableList<Note>, private val userId: String, private val onNoteClick: (Note, Int) -> Unit) :
-    RecyclerView.Adapter<NotesAdapter.NotesViewHolder>() {
+class NotesAdapter(
+    private val notes: MutableList<Pair<String, Note>>,
+    private val onNoteClick: (String, Note) -> Unit
+) : RecyclerView.Adapter<NotesAdapter.NotesViewHolder>() {
 
-    class NotesViewHolder(val binding: ActivityNoteItemBinding) : RecyclerView.ViewHolder(binding.root)
+    class NotesViewHolder(val binding: ActivityNoteItemBinding) :
+        RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NotesViewHolder {
         val binding = ActivityNoteItemBinding.inflate(
@@ -21,12 +26,12 @@ class NotesAdapter(private val notes: MutableList<Note>, private val userId: Str
     }
 
     override fun onBindViewHolder(holder: NotesViewHolder, position: Int) {
-        val note = notes[position]
+        val (docId, note) = notes[position]
         holder.binding.noteTitleTextView.text = note.title
         holder.binding.noteContentTextView.text = note.content
 
         holder.itemView.setOnClickListener {
-            onNoteClick(note, position)
+            onNoteClick(docId, note)
         }
 
         holder.binding.menuButton.setOnClickListener {
@@ -36,11 +41,16 @@ class NotesAdapter(private val notes: MutableList<Note>, private val userId: Str
             popup.setOnMenuItemClickListener { item ->
                 when (item.itemId) {
                     R.id.action_delete -> {
+                        val db = FirebaseFirestore.getInstance()
+                        val userId = FirebaseAuth.getInstance().currentUser!!.uid
+
+                        db.collection("users").document(userId)
+                            .collection("notes").document(docId)
+                            .delete()
 
                         notes.removeAt(position)
                         notifyItemRemoved(position)
                         notifyItemRangeChanged(position, notes.size)
-                        NotesStorage.saveNotes(holder.itemView.context, userId, notes)
                         true
                     }
                     else -> false
@@ -53,5 +63,4 @@ class NotesAdapter(private val notes: MutableList<Note>, private val userId: Str
     }
 
     override fun getItemCount(): Int = notes.size
-
 }

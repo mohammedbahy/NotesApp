@@ -7,28 +7,28 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bahy.notesapp.databinding.ActivityNotesListBinding
 import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.toObject
 
 class NotesList : AppCompatActivity() {
 
     private lateinit var binding: ActivityNotesListBinding
     private lateinit var adapter: NotesAdapter
-    private lateinit var notes: MutableList<Note>
-    private lateinit var userId: String
+    private val notes = mutableListOf<Pair<String,Note>>()
+
+    private val db = FirebaseFirestore.getInstance()
+    private val userId = FirebaseAuth.getInstance().currentUser!!.uid
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityNotesListBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        userId = Firebase.auth.currentUser?.uid ?: return
-
-        notes = NotesStorage.loadNotes(this, userId)
-        val rv: RecyclerView = binding.notesRecyclerView
-
-        adapter = NotesAdapter(notes, userId) { note, position ->
+        adapter = NotesAdapter(notes) { docId, note ->
             val intent = Intent(this, ListItem::class.java)
-            intent.putExtra("noteIndex", position)
+            intent.putExtra("noteIndex", docId)
             intent.putExtra("noteTitle", note.title)
             intent.putExtra("noteContent", note.content)
             startActivity(intent)
@@ -52,8 +52,20 @@ class NotesList : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        notes.clear()
-        notes.addAll(NotesStorage.loadNotes(this, userId))
-        adapter.notifyDataSetChanged()
+        loadNotes()
+    }
+
+    private fun loadNotes(){
+        db.collection("users").document(userId).collection("notes")
+            .orderBy("timestamp")
+            .get()
+            .addOnSuccessListener { result ->
+                notes.clear()
+                for (doc in result) {
+                    val note = doc.toObject<Note>()
+                    notes.add(Pair(doc.id, note))
+                }
+                adapter.notifyDataSetChanged()
+            }
     }
 }
