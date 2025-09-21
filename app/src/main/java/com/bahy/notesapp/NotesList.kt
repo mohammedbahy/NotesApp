@@ -1,10 +1,10 @@
 package com.bahy.notesapp
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.bahy.notesapp.databinding.ActivityNotesListBinding
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
@@ -54,6 +54,7 @@ class NotesList : AppCompatActivity() {
         super.onResume()
         loadNotes()
     }
+
 
     private fun loadNotes(){
         db.collection("users").document(userId).collection("notes")
